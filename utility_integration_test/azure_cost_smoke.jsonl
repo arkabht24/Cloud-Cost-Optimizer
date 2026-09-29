@@ -1,0 +1,2 @@
+{"id":"public-ip-removal","question":"What should we do with democost-unused-ip?","reference_answer":"Confirm that the unassigned public IP is not reserved for a planned cutover or dependency, then remove it through the approved change process."}
+{"id":"unknown-resource-abstention","question":"Can we delete legacy-vm-99?","reference_answer":"The resource is not present in the supplied inventory, so its ownership and deletion safety cannot be determined."}

@@ -1,0 +1,23 @@
+.env
+.env.*
+!.env.example
+
+.venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Local data stores and generated evaluation artifacts
+chroma_db/
+chroma_db_realistic/
+rag_eval_results/
+evals/results.json
+evals/results/
+utility_integration_test/results/
+*.log
+
+# Credentials and certificates
+*.pem
+*.key
+*.p12
+*.pfx

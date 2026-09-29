@@ -1,0 +1,11 @@
+[
+  {
+    "id": "disk-no-immediate-delete",
+    "question": "Can we immediately delete analytics-vm-01-data?",
+    "reference_answer": "No. The disk has been unattached for 43 days, but it may be a recovery artifact. Confirm with the data-platform owner, retain snapshots through the rollback window, and delete only after the seven-day approval window.",
+    "expected_sources": ["07_northwind_optimization_decision_log.pdf", "04_northwind_finops_monthly_cost_review.pdf"],
+    "must_contain": ["analytics-vm-01-data"],
+    "must_not_contain": ["immediately delete", "demo-cost-sql", "democostarchive"],
+    "expected_baseline": "pass"
+  }
+]

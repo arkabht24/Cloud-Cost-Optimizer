@@ -1,0 +1,3 @@
+{"id":"healthy-removal-no-retry","question":"Can we remove tailspin-unused-ip-02 today?","reference_answer":"Removal is approved only after the owner confirms the final dependency scan."}
+{"id":"healthy-rightsizing-no-retry","question":"Can we downsize tailspin-batch-vm-02 now?","reference_answer":"Do not reduce capacity before the September batch close, owner approval, and a rollback plan."}
+{"id":"insufficient-evidence-retries-and-abstains","question":"Can we delete tailspin-orphan-disk-03 immediately?","reference_answer":"There is no recorded decision or retention review, so deletion safety cannot be determined."}

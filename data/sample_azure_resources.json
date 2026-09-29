@@ -1,0 +1,125 @@
+[
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Compute/virtualMachines/analytics-vm-01",
+    "name": "analytics-vm-01",
+    "type": "Microsoft.Compute/virtualMachines",
+    "location": "eastus",
+    "properties": {"hardwareProfile": {"vmSize": "Standard_D8s_v5"}, "provisioningState": "Succeeded"},
+    "tags": {"environment": "development", "owner": "data-team", "schedule": "business-hours"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Compute/virtualMachines/web-prod-01",
+    "name": "web-prod-01",
+    "type": "Microsoft.Compute/virtualMachines",
+    "location": "eastus",
+    "properties": {"hardwareProfile": {"vmSize": "Standard_D4s_v5"}, "provisioningState": "Succeeded"},
+    "tags": {"environment": "production", "owner": "web-team"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Compute/disks/analytics-vm-01-data",
+    "name": "analytics-vm-01-data",
+    "type": "Microsoft.Compute/disks",
+    "location": "eastus",
+    "sku": {"name": "Premium_LRS"},
+    "properties": {"diskSizeGB": 1024, "diskState": "Unattached"},
+    "tags": {"environment": "development", "owner": "data-team"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Storage/storageAccounts/democostarchive",
+    "name": "democostarchive",
+    "type": "Microsoft.Storage/storageAccounts",
+    "location": "eastus",
+    "sku": {"name": "Standard_LRS"},
+    "kind": "StorageV2",
+    "properties": {"accessTier": "Hot", "allowBlobPublicAccess": false},
+    "tags": {"environment": "production", "dataClassification": "internal"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Sql/servers/democost-sql",
+    "name": "democost-sql",
+    "type": "Microsoft.Sql/servers",
+    "location": "eastus",
+    "properties": {"administratorLogin": "sqladmin", "version": "12.0"},
+    "tags": {"environment": "production", "owner": "finance-app"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Web/serverfarms/democost-app-plan",
+    "name": "democost-app-plan",
+    "type": "Microsoft.Web/serverfarms",
+    "location": "eastus",
+    "sku": {"name": "P1v3", "tier": "PremiumV3", "capacity": 3},
+    "kind": "linux",
+    "properties": {"reserved": true, "maximumElasticWorkerCount": 1},
+    "tags": {"environment": "production", "owner": "web-team"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Web/sites/democost-portal",
+    "name": "democost-portal",
+    "type": "Microsoft.Web/sites",
+    "location": "eastus",
+    "kind": "app,linux",
+    "properties": {"state": "Running", "httpsOnly": true},
+    "tags": {"environment": "production", "owner": "web-team"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Network/publicIPAddresses/democost-unused-ip",
+    "name": "democost-unused-ip",
+    "type": "Microsoft.Network/publicIPAddresses",
+    "location": "eastus",
+    "sku": {"name": "Standard"},
+    "properties": {"publicIPAllocationMethod": "Static", "ipAddress": null},
+    "tags": {"environment": "development", "status": "candidate-for-removal"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.ContainerRegistry/registries/democostregistry",
+    "name": "democostregistry",
+    "type": "Microsoft.ContainerRegistry/registries",
+    "location": "eastus",
+    "sku": {"name": "Premium"},
+    "properties": {"adminUserEnabled": false, "publicNetworkAccess": "Enabled"},
+    "tags": {"environment": "production", "owner": "platform-team"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.KeyVault/vaults/democost-kv",
+    "name": "democost-kv",
+    "type": "Microsoft.KeyVault/vaults",
+    "location": "eastus",
+    "properties": {"enableRbacAuthorization": true, "enablePurgeProtection": true},
+    "tags": {"environment": "production", "owner": "platform-team"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Network/publicIPAddresses/tailspin-unused-ip-02",
+    "name": "tailspin-unused-ip-02",
+    "type": "Microsoft.Network/publicIPAddresses",
+    "location": "eastus2",
+    "sku": {"name": "Standard"},
+    "properties": {"publicIPAllocationMethod": "Static", "ipAddress": null},
+    "tags": {"environment": "development", "owner": "tailspin-platform", "status": "candidate-for-removal"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Compute/virtualMachines/tailspin-batch-vm-02",
+    "name": "tailspin-batch-vm-02",
+    "type": "Microsoft.Compute/virtualMachines",
+    "location": "eastus2",
+    "properties": {"hardwareProfile": {"vmSize": "Standard_D8s_v5"}, "provisioningState": "Succeeded"},
+    "tags": {"environment": "development", "owner": "tailspin-data", "schedule": "nightly-batch"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Compute/disks/tailspin-archive-disk-02",
+    "name": "tailspin-archive-disk-02",
+    "type": "Microsoft.Compute/disks",
+    "location": "eastus2",
+    "sku": {"name": "Premium_LRS"},
+    "properties": {"diskSizeGB": 512, "diskState": "Unattached"},
+    "tags": {"environment": "production", "owner": "tailspin-finance", "classification": "regulated"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Compute/disks/tailspin-orphan-disk-03",
+    "name": "tailspin-orphan-disk-03",
+    "type": "Microsoft.Compute/disks",
+    "location": "eastus2",
+    "sku": {"name": "StandardSSD_LRS"},
+    "properties": {"diskSizeGB": 256, "diskState": "Unattached"},
+    "tags": {"environment": "development", "owner": "tailspin-data"}
+  }
+]
