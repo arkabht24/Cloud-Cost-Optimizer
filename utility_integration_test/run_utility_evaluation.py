@@ -2,10 +2,12 @@
 
 from pathlib import Path
 
+from dotenv import load_dotenv
 from rag_api_eval import evaluate_rag
 
 
 ROOT = Path(__file__).resolve().parent
+load_dotenv(ROOT.parent / ".env")
 
 summary = evaluate_rag(
     api_config={
@@ -36,9 +38,30 @@ summary = evaluate_rag(
         "total_tokens_path": "$.application_usage.total_tokens",
         "generation_calls_path": "$.application_usage.generation_calls",
     },
-    # This smoke run verifies mapping/reporting without consuming Judge tokens.
-    # Change this to selected RAGAS metric names after configuring a Judge.
-    metrics_config={"metrics": []},
+    # Full retrieval, generation, security, and LLM Judge capability run.
+    metrics_config={
+        "groups": ["retrieval", "generation"],
+        "metrics": [
+            "context_precision",
+            "context_recall",
+            "faithfulness",
+            "answer_relevancy",
+            "answer_correctness",
+        ],
+        "thresholds": {"pii_leakage": 0},
+    },
+    judge_config={
+        "provider": "gemini",
+        "model": "gemini-3.6-flash",
+        "api_key_env": "GOOGLE_API_KEY",
+        "concurrency": 1,
+        "timeout_seconds": 120,
+        "generate_assessment": True,
+    },
+    pii_config={
+        "enabled": True,
+        "entity_types": ["email", "phone", "us_ssn", "payment_card"],
+    },
     reporting_config={"output_dir": "rag_eval_results"},
 )
 

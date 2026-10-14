@@ -82,6 +82,28 @@ def get_active_subscription() -> str:
         return ""
 
 
+def list_subscriptions() -> list[dict]:
+    """Return subscriptions visible to the signed-in Azure CLI identity."""
+    result = run_azure_cli([
+        "az", "account", "list",
+        "--query", "[?state=='Enabled'].{id:id,name:name,tenantId:tenantId}",
+        "--output", "json",
+    ])
+    return json.loads(result) if result else []
+
+
+def list_resource_groups(subscription: Optional[str] = None) -> list[dict]:
+    """Return resource groups for a selected subscription without exposing credentials."""
+    if subscription and subscription.strip():
+        run_azure_cli(build_subscription_set_command(subscription.strip()))
+    result = run_azure_cli([
+        "az", "group", "list",
+        "--query", "[].{name:name,location:location,managedBy:managedBy}",
+        "--output", "json",
+    ])
+    return json.loads(result) if result else []
+
+
 def fetch_all_resources(resource_group: str, subscription: Optional[str] = None) -> list:
     """Return Azure resources, or a local fixture for the built-in demo group."""
     if resource_group.strip().lower() == DEMO_RESOURCE_GROUP:

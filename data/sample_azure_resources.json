@@ -121,5 +121,13 @@
     "sku": {"name": "StandardSSD_LRS"},
     "properties": {"diskSizeGB": 256, "diskState": "Unattached"},
     "tags": {"environment": "development", "owner": "tailspin-data"}
+  },
+  {
+    "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/demo-cost-lab/providers/Microsoft.Compute/virtualMachines/retry-lab-vm-01",
+    "name": "retry-lab-vm-01",
+    "type": "Microsoft.Compute/virtualMachines",
+    "location": "eastus2",
+    "properties": {"hardwareProfile": {"vmSize": "Standard_D8s_v5"}, "provisioningState": "Succeeded"},
+    "tags": {"environment": "development", "owner": "retry-lab-platform", "schedule": "business-hours"}
   }
 ]

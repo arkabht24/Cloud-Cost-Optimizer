@@ -21,3 +21,7 @@ utility_integration_test/results/
 *.key
 *.p12
 *.pfx
+
+# React dashboard build artifacts
+web/node_modules/
+web/dist/

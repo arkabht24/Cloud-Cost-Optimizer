@@ -9,6 +9,7 @@ from azure.resource_fetcher import fetch_all_resources
 from azure.resource_parser import parse_all_resources, resolve_resource_scope
 from config.settings import COLLECTION_NAME, LLM_PROVIDER, OLLAMA_MODEL, RETRIEVAL_TOP_K
 from rag.llm_client import get_llm_response
+from rag.query_policy import assess_query_policy
 from rag.response_policy import (
     build_repair_prompt,
     build_structured_answer_prompt,
@@ -42,6 +43,67 @@ def _log_retrieval_attempt(strategy: str, quality: dict[str, Any]) -> None:
     )
 
 
+def _query_policy_rejection_result(
+    question: str,
+    resource_group: str,
+    top_k: int,
+    started_at: float,
+    policy_reason: str,
+    policy_message: str,
+) -> dict[str, Any]:
+    """Return a safe, no-LLM response for a request outside product scope."""
+    return {
+        "answer": policy_message,
+        "question": question,
+        "resource_group": resource_group,
+        "resources": {},
+        "scope": {
+            "status": "policy_rejected",
+            "matched_resources": [],
+            "scope_rewrite_applied": False,
+            "response_mode": "query_policy_rejection",
+        },
+        "retrieved_contexts": [],
+        "retrieval_quality": {
+            "passed": False,
+            "action": "policy_rejection",
+            "requested_resources": [],
+            "matching_context_count": 0,
+            "evidence_roles": [],
+            "source_count": 0,
+            "sources": [],
+            "best_relevance_score": None,
+            "issues": [policy_reason],
+            "attempts": [{"strategy": "query_policy", "passed": False}],
+        },
+        "prompt": None,
+        "decision": {
+            "decision": "not_supported",
+            "resource": None,
+            "reason": [policy_message],
+            "required_conditions": [],
+            "recommended_next_step": "Ask a non-destructive cloud cost optimization question.",
+            "citation_ids": [],
+        },
+        "meta": {
+            "provider": LLM_PROVIDER,
+            "model": OLLAMA_MODEL if LLM_PROVIDER == "ollama" else None,
+            "collection": COLLECTION_NAME,
+            "top_k": top_k,
+            "latency_ms": round((perf_counter() - started_at) * 1000),
+        },
+        "application_usage": {
+            "provider": LLM_PROVIDER,
+            "deployment": "local" if LLM_PROVIDER == "ollama" else "api",
+            "model": OLLAMA_MODEL if LLM_PROVIDER == "ollama" else None,
+            "generation_calls": 0,
+            "input_tokens": None,
+            "output_tokens": None,
+            "total_tokens": None,
+        },
+    }
+
+
 def analyze_resources(
     question: str,
     resource_group: str = "demo-cost-lab",
@@ -50,6 +112,18 @@ def analyze_resources(
 ) -> dict[str, Any]:
     """Run the RAG flow and return an evaluation-friendly execution trace."""
     started_at = perf_counter()
+    query_policy = assess_query_policy(question)
+    if not query_policy["allowed"]:
+        logger.info("query_policy_rejection reason=%s", query_policy["reason_code"])
+        return _query_policy_rejection_result(
+            question=question,
+            resource_group=resource_group,
+            top_k=top_k,
+            started_at=started_at,
+            policy_reason=str(query_policy["reason_code"]),
+            policy_message=str(query_policy["message"]),
+        )
+
     generation_calls: list[dict[str, Any]] = []
     raw_resources = fetch_all_resources(resource_group, subscription)
     resources = parse_all_resources(raw_resources)

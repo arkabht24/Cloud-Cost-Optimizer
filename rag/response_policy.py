@@ -128,7 +128,13 @@ Rules:
 - Follow the evidence-plan decision. A pending, deferred, retained, or approval-required action is not immediately allowed.
 - Include all material approval, dependency, retention, rollback, or load-test conditions from the evidence plan.
 - Do not mention another resource, generic regional pricing, or an unsupported recommendation.
-- For a yes/no question, the decision must answer it directly."""
+- For a yes/no question, the decision must answer it directly.
+- Write concise, business-facing language rather than copying source-document labels or metadata.
+- Never begin an item with labels such as "Resource:", "Decision:", "Evidence:", or a citation/source identifier.
+- Provide at most two distinct reason statements and at most three distinct required conditions.
+- A required condition must be an action, safeguard, approval, or validation step. Do not restate the decision or the resource name as a condition.
+- Do not repeat the same fact in reason, required_conditions, and recommended_next_step.
+- Make recommended_next_step a single actionable sentence."""
 
 
 def build_repair_prompt(draft: str, question: str, plan: dict[str, Any]) -> str:

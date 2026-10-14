@@ -3,6 +3,49 @@ import streamlit as st
 from azure.resource_fetcher import build_subscription_set_command, get_active_subscription, run_azure_cli
 from rag.api_client import request_analysis
 
+
+DECISION_LABELS = {
+    "yes": "Yes",
+    "no": "No",
+    "approved_with_conditions": "Approved with conditions",
+    "needs_review": "Needs review",
+    "insufficient_evidence": "Insufficient evidence",
+}
+
+
+def _as_text_list(value):
+    """Return safe, displayable list items from the stable API decision contract."""
+    return [str(item).strip() for item in value if str(item).strip()] if isinstance(value, list) else []
+
+
+def render_analysis_response(answer: str, decision: dict | None) -> None:
+    """Render the structured API decision; retain text-only fallback compatibility."""
+    if not isinstance(decision, dict):
+        st.markdown(answer)
+        return
+
+    verdict = DECISION_LABELS.get(str(decision.get("decision", "")).lower())
+    resource = str(decision.get("resource", "")).strip()
+    reasons = _as_text_list(decision.get("reason"))
+    conditions = _as_text_list(decision.get("required_conditions"))
+    next_step = str(decision.get("recommended_next_step", "")).strip()
+
+    if not verdict or not resource:
+        st.markdown(answer)
+        return
+
+    st.markdown(f"### {verdict}")
+    st.caption(f"Resource: `{resource}`")
+    if reasons:
+        st.markdown("**Why**")
+        st.markdown("\n".join(f"- {reason}" for reason in reasons))
+    if conditions:
+        st.markdown("**Before proceeding**")
+        st.markdown("\n".join(f"- {condition}" for condition in conditions))
+    if next_step:
+        st.markdown("**Next step**")
+        st.markdown(next_step)
+
 st.set_page_config(page_title="Azure Cost Insight", page_icon="💼", layout="wide")
 
 st.markdown(
@@ -328,7 +371,10 @@ if not st.session_state.resource_group:
 # Replay history
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+        if msg["role"] == "assistant":
+            render_analysis_response(msg["content"], msg.get("decision"))
+        else:
+            st.markdown(msg["content"])
 
 # Chat input
 question = st.chat_input("Ask a cost optimization question...")
@@ -347,8 +393,14 @@ if question:
                     st.session_state.subscription,
                 )
                 response = api_response["answer"]
+                structured_decision = api_response.get("decision")
             except Exception as e:
                 response = f"⚠️ Error running analysis: `{e}`"
-        st.markdown(response)
+                structured_decision = None
+        render_analysis_response(response, structured_decision)
 
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": response,
+        "decision": structured_decision,
+    })
